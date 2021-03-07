@@ -15,6 +15,17 @@ class Product extends Model {
     images(){
         return this.belongsToMany ('App/Models/Image')
     }
+
+    categories(){
+        return this.belongsToMany('App/Models/Category')
+    }
+
+    /**
+     * relacionamento entre produtose cupons
+     */
+    coupuns(){
+        return this.belongsToMany('App/Models/Coupon')
+    }
 }
 
 module.exports = Product
