@@ -19,3 +19,9 @@ const Route = use('Route')
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
+
+/** Import authentication routes */
+require('./auth.js')
+
+/** Import admin routes */
+require('./admin.js')
