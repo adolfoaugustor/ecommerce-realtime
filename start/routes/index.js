@@ -25,3 +25,6 @@ require('./auth.js')
 
 /** Import admin routes */
 require('./admin.js')
+
+/** Import client routes */
+require('./client.js')
