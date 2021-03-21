@@ -8,4 +8,6 @@ tmp
 .env
 
 # The development sqlite file
-database/*.sqlite
+database/*.mysql
+docker
+.vscode
