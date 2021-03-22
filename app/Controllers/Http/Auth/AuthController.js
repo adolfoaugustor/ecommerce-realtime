@@ -1,33 +1,73 @@
 'use strict'
 
+const Database = use('Database')
+const User = use('App/Models/User')
+const Role = use('Role')
+
 class AuthController {
-  async register({ request, response }) {
-    //
-  }
 
-  async login({ request, response, auth }) {
+	async register({ request, response }) {
 
-  }
+		const trx = await Database.beginTransaction()
 
-  async refresh({ request, response, auth }) {
+		try {
+			const { name, username, email, password } = request.all()
+			const user = await User.create({ name, username, email, password }, trx)
+			const userRole = await Role.findBy('slug', 'client')
 
-  }
+			await user.roles().attach([userRole.id], null, trx)
+			await trx.commit()
 
-  async logout({ request, response, auth }) {
+			return response.status(201).send({ data: user })
+		} catch (error) {
+			await trx.rollback()
+			return response.status(400).send({
+				message: 'Erro ao realizar cadastro!'
+			})
+		}
+	}
 
-  }
+	async login({ request, response, auth }) {
+		const { email, password } = request().all()
 
-  async forgot({ request, response }) {
+		let data = await auth.withRefreshToken.attempt(email, password)
 
-  }
+		return response.send({ data })
+	}
 
-  async remember({ request, response }) {
+	async refresh({ request, response, auth }) {
+		let refresh_token = request.input('refresh_token')
 
-  }
+		if (!refresh_token) {
+			refresh_token = request.header('refresh_token')
+		}
+		const user = await auth.newRefreshToken().generateForRefreshToken(refresh_token)
 
-  async reset({ request, response }) {
+		return response.send({ data: user })
+	}
 
-  }
+	async logout({ request, response, auth }) {
+		let refresh_token = request.input('refresh_token')
+
+		if (!refresh_token) {
+			refresh_token = request.header('refresh_token')
+		}
+
+		await authenticator('jwt').revokeTokens([refresh_token], true)
+		return response.status(204).send({})
+	}
+
+	async forgot({ request, response }) {
+
+	}
+
+	async remember({ request, response }) {
+
+	}
+
+	async reset({ request, response }) {
+
+	}
 }
 
 module.exports = AuthController

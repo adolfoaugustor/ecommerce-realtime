@@ -21,10 +21,10 @@ Route.get('/', () => {
 })
 
 /** Import authentication routes */
-require('./auth.js')
+require('./auth')
 
 /** Import admin routes */
-require('./admin.js')
+require('./admin')
 
 /** Import client routes */
-require('./client.js')
+require('./client')
