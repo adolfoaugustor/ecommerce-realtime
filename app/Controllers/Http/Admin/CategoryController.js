@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Category = use('App/Models/Category')
+
 /**
  * Resourceful controller for interacting with categories
  */
@@ -16,8 +18,18 @@ class CategoryController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    * @param {View} ctx.view
+   * @param {Object} ctx.pagination
    */
-  async index({ request, response, view }) {
+  async index({ request, response, view, pagination }) {
+    const { title } = request.only(['title'])
+    const query = Category.query()
+
+    if (title) {
+      query.where('title', 'LIKE', `%${title}%`)
+    }
+
+    const categories = await query.paginate(pagination.page, pagination.perpage)
+    return response.send(categories)
   }
 
   /**

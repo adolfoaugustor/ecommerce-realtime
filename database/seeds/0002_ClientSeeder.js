@@ -27,7 +27,7 @@ class ClientSeeder {
 
     const user = await User.create({
       name: 'Adolfo A.',
-      username: 'Rodrigues',
+      surname: 'Rodrigues',
       email: 'adolfoaugustor@gmail.com',
       password: '123123'
     })

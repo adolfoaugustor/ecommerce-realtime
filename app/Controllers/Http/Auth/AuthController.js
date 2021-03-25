@@ -11,8 +11,8 @@ class AuthController {
 		const trx = await Database.beginTransaction()
 
 		try {
-			const { name, username, email, password } = request.all()
-			const user = await User.create({ name, username, email, password }, trx)
+			const { name, surname, email, password } = request.all()
+			const user = await User.create({ name, surname, email, password }, trx)
 			const userRole = await Role.findBy('slug', 'client')
 
 			await user.roles().attach([userRole.id], null, trx)
