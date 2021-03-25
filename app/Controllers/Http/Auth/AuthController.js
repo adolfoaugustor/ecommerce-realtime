@@ -28,9 +28,9 @@ class AuthController {
 	}
 
 	async login({ request, response, auth }) {
-		const { email, password } = request().all()
+		const { email, password } = request.all()
 
-		let data = await auth.withRefreshToken.attempt(email, password)
+		let data = await auth.withRefreshToken().attempt(email, password)
 
 		return response.send({ data })
 	}
@@ -52,9 +52,12 @@ class AuthController {
 		if (!refresh_token) {
 			refresh_token = request.header('refresh_token')
 		}
+		
+		const loggedOut = await auth
+      .authenticator('jwt')
+      .revokeTokens([refresh_token], true)
 
-		await authenticator('jwt').revokeTokens([refresh_token], true)
-		return response.status(204).send({})
+    return response.status(204).send({})
 	}
 
 	async forgot({ request, response }) {
