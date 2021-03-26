@@ -41,6 +41,14 @@ class CategoryController {
    * @param {Response} ctx.response
    */
   async store({ request, response }) {
+    try {
+      const { title, description, image_id } = request.all()
+      const category = Category.create({ title, description, image_id })
+
+      return response.status(201).send({ category })
+    } catch (error) {
+      return response.status(400).send({ message: "Erro ao processar sua informação"})
+    }
   }
 
   /**
@@ -63,7 +71,13 @@ class CategoryController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update({ params, request, response }) {
+  async update({ params: { id }, request, response }) {
+    const category = await Category.findOrFail(id)
+    const { title, description, image_id } = request.all()
+    category.merge({title, description, image_id})
+    await category.save()
+
+    return response.send(category)
   }
 
   /**
@@ -75,6 +89,7 @@ class CategoryController {
    * @param {Response} ctx.response
    */
   async destroy({ params, request, response }) {
+
   }
 }
 
