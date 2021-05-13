@@ -4,11 +4,20 @@ services:
   database:
     image: mysql:5.7
     volumes:
-      - ./docker/database:/var/lib/mysql
+      - ./../db:/var/lib/mysql
     ports:
-      - 3306:3306
+      - 3006:3306
     environment:
-      - MYSQL_USER=root
+      - MYSQL_DATABASE=adonis
+      - MYSQL_USER=toor
       - MYSQL_PASSWORD=1234
       - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_DATABASE=adonis
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: toor
+      PMA_PASSWORD: 1234
+    ports:
+      - '8081:80'

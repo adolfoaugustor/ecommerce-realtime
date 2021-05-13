@@ -53,7 +53,7 @@ module.exports = {
     connection: {
       host: Env.get('DB_HOST', 'localhost'),
       port: Env.get('DB_PORT', '3306'),
-      user: Env.get('DB_USER', 'root'),
+      user: Env.get('DB_USER', 'toor'),
       password: Env.get('DB_PASSWORD', '1234'),
       database: Env.get('DB_DATABASE', 'adonis')
     },
