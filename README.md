@@ -1,19 +1,20 @@
 # Adonis API application
 
-This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
-
-1. Bodyparser
-2. Authentication
-3. CORS
-4. Lucid ORM
-5. Migrations and seeds
+## Require node 8
+Install for ubuntu [https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04-pt]
+ - v10.24.1
 
 ## Setup
-
-Use the adonis command to install the blueprint
-
-```bash
+```
 npm install
+```
+
+```
+npm i -g @adonisjs/cli
+```
+
+```
+adonis key:generate
 ```
 
 ### Docker-Compose
@@ -31,3 +32,9 @@ Run the following command to run startup migrations.
 ```js
 adonis migration:run
 ```
+
+# ___________________________________________________________________________________________________ #
+
+API List
+
+[api-list.txt]
