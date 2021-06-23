@@ -4,6 +4,9 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Image = use('App/Models/Image')
+const { manage_single_upload, manage_multiple_uploads } = use('App/Helpers')
+
 /**
  * Resourceful controller for interacting with images
  */
@@ -16,20 +19,14 @@ class ImageController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    * @param {View} ctx.view
+   * @param {Object} ctx.pagination
    */
-  async index ({ request, response, view }) {
-  }
+  async index ({ request, response, pagination }) {
+    const images = await Image.query()
+      .orderBy('id', 'DESC')
+      .paginate(pagination.page, pagination.limit)
 
-  /**
-   * Render a form to be used for creating a new image.
-   * GET images/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    return response.send(images)
   }
 
   /**
@@ -41,6 +38,41 @@ class ImageController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    try {
+      
+      const fileJar = request.file('images',{
+        types: ['images'],
+        size: '2mb'
+      })
+
+      let images = []
+
+      if (!fileJar.files) {
+        const file = await manage_single_upload(fileJar)
+        if (file.moved()) {
+          const image = await Image.create({
+            path: file.fimeName,
+            size: file.size,
+            original_name: file.clientName,
+            extension: file.subtype
+          })
+
+          images.push(image)
+
+          return response.status(200).send({ success: images, errors:{} })
+        }
+
+        return response.status(400).send({
+          message: 'Não foi possível processar a imagem.'
+        })
+      }
+
+      let files = await manage_multiple_uploads(fileJar)
+      
+      await Promise.all()
+    } catch (error) {
+      
+    }
   }
 
   /**
